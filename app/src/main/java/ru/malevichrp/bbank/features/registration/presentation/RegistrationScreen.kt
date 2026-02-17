@@ -30,7 +30,9 @@ import ru.malevichrp.bbank.coreui.TextField
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onSuccessRegistration: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -46,9 +48,8 @@ fun RegistrationScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { state ->
                 when (state) {
-                    is RegistrationUiEffect.SuccessRegistration -> {
-                        //todo navigate to MainScreen
-                    }
+                    is RegistrationUiEffect.SuccessRegistration ->
+                        onSuccessRegistration()
 
                     is RegistrationUiEffect.ShowError -> {
                         snackbarHostState.showSnackbar(state.error)
@@ -75,9 +76,9 @@ fun RegistrationScreen(
             viewModel.register(
                 registrationData
             )
-        }, {
-            //todo navigate to login
-        })
+        },
+        onBackClick
+    )
 }
 
 @Composable

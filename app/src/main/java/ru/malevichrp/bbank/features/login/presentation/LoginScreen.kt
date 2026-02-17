@@ -31,7 +31,9 @@ import ru.malevichrp.bbank.coreui.LogoBBank
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onSuccessLogin: () -> Unit,
+    onRegisterClick: () -> Unit
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -43,9 +45,7 @@ fun LoginScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { state ->
                 when (state) {
-                    is UiEffect.SuccessLogin -> {
-                        //todo navigate to MainScreen
-                    }
+                    is UiEffect.SuccessLogin -> onSuccessLogin()
 
                     is UiEffect.ShowError -> {
                         snackbarHostState.showSnackbar(state.error)
@@ -63,9 +63,9 @@ fun LoginScreen(
                 loginTextFieldState.text.toString(),
                 passwordTextFieldState.text.toString()
             )
-        }, {
-            //todo navigate to register
-        })
+        },
+        onRegisterClick
+    )
 }
 
 @Composable

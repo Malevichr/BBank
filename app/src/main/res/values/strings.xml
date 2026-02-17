@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">BBank</string>
+    <string name="bbank">BBank</string>
+    <string name="entrance_bank">Вход в банк</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="enter">Вход</string>
+    <string name="register">Регистрация</string>
+    <string name="common_error">Произошла ошибка</string>
+    <string name="wrong_login_data_error">Неправильные данные входа</string>
+    <string name="network_error">Ошибка сети</string>
 </resources>

@@ -1,4 +1,4 @@
-package ru.malevichrp.bbank.features.login.data
+package ru.malevichrp.bbank.features.login.domain
 
 sealed interface DomainError {
     fun <T> map(mapper: Mapper<T>): T

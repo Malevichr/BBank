@@ -1,4 +1,4 @@
-package ru.malevichrp.bbank.features.login.data
+package ru.malevichrp.bbank.features.login.domain
 
 sealed interface LoginResult {
     data object Success : LoginResult

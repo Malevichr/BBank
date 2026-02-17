@@ -5,8 +5,13 @@
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="enter">Вход</string>
-    <string name="register">Регистрация</string>
+    <string name="registration">Регистрация</string>
     <string name="common_error">Произошла ошибка</string>
     <string name="wrong_login_data_error">Неправильные данные входа</string>
     <string name="network_error">Ошибка сети</string>
+    <string name="last_name">Фамилия</string>
+    <string name="first_name">Имя</string>
+    <string name="middle_name">Отчество</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="back">Назад</string>
 </resources>

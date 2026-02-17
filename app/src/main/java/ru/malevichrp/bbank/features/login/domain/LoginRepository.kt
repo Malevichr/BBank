@@ -1,4 +1,4 @@
-package ru.malevichrp.bbank.features.login.data
+package ru.malevichrp.bbank.features.login.domain
 
 import kotlinx.coroutines.delay
 import javax.inject.Inject

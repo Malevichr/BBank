@@ -3,7 +3,7 @@ package ru.malevichrp.bbank.features.login.presentation
 
 import ru.malevichrp.bbank.R
 import ru.malevichrp.bbank.core.StringResourceWrapper
-import ru.malevichrp.bbank.features.login.data.DomainError
+import ru.malevichrp.bbank.features.login.domain.DomainError
 import javax.inject.Inject
 
 class ErrorResourceMapper @Inject constructor(

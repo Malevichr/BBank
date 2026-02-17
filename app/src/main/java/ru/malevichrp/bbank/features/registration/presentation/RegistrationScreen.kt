@@ -1,10 +1,9 @@
-package ru.malevichrp.bbank.features.login.presentation
+package ru.malevichrp.bbank.features.registration.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.TextFieldState
@@ -12,7 +11,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,14 +25,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import ru.malevichrp.bbank.R
 import ru.malevichrp.bbank.coreui.LogoBBank
+import ru.malevichrp.bbank.coreui.TextField
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel,
+fun RegistrationScreen(
+    viewModel: RegistrationViewModel,
     snackbarHostState: SnackbarHostState
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    val lastNameTextFieldState = rememberTextFieldState()
+    val firstNameTextFieldState = rememberTextFieldState()
+    val middleNameTextFieldState = rememberTextFieldState()
 
     val loginTextFieldState = rememberTextFieldState()
     val passwordTextFieldState = rememberTextFieldState()
@@ -43,38 +46,50 @@ fun LoginScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { state ->
                 when (state) {
-                    is UiEffect.SuccessLogin -> {
+                    is RegistrationUiEffect.SuccessRegistration -> {
                         //todo navigate to MainScreen
                     }
 
-                    is UiEffect.ShowError -> {
+                    is RegistrationUiEffect.ShowError -> {
                         snackbarHostState.showSnackbar(state.error)
                     }
                 }
             }
         }
     }
-    LoginScreenUi(
+    RegistrationScreenUi(
+        lastNameTextFieldState,
+        firstNameTextFieldState,
+        middleNameTextFieldState,
         loginTextFieldState,
         passwordTextFieldState,
         state.value,
         {
-            viewModel.login(
+            val registrationData = RegistrationData(
+                lastNameTextFieldState.text.toString(),
+                firstNameTextFieldState.text.toString(),
+                middleNameTextFieldState.text.toString(),
                 loginTextFieldState.text.toString(),
                 passwordTextFieldState.text.toString()
             )
+            viewModel.register(
+                registrationData
+            )
         }, {
-            //todo navigate to register
+            //todo navigate to login
         })
 }
 
 @Composable
-fun LoginScreenUi(
+fun RegistrationScreenUi(
+    lastNameTextFieldState: TextFieldState,
+    firstNameTextFieldState: TextFieldState,
+    middleNameTextFieldState: TextFieldState,
     loginTextFieldState: TextFieldState,
     passwordTextFieldState: TextFieldState,
-    state: LoginUiState,
-    onEnterClick: () -> Unit,
+    state: RegistrationUiState,
     onRegisterClick: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
 
     Box(Modifier.fillMaxSize()) {
@@ -84,17 +99,20 @@ fun LoginScreenUi(
                 .align(Alignment.TopCenter)
         )
         when (state) {
-            is LoginUiState.Initial -> LoginInitial(
+            is RegistrationUiState.Initial -> RegistrationInitial(
+                lastNameTextFieldState,
+                firstNameTextFieldState,
+                middleNameTextFieldState,
                 loginTextFieldState,
                 passwordTextFieldState,
-                onEnterClick,
                 onRegisterClick,
+                onBackClick,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(16.dp)
             )
 
-            is LoginUiState.Loading -> {
+            is RegistrationUiState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
@@ -102,11 +120,14 @@ fun LoginScreenUi(
 }
 
 @Composable
-fun LoginInitial(
+fun RegistrationInitial(
+    lastNameTextFieldState: TextFieldState,
+    firstNameTextFieldState: TextFieldState,
+    middleNameTextFieldState: TextFieldState,
     loginTextFieldState: TextFieldState,
     passwordTextFieldState: TextFieldState,
-    onEnterClick: () -> Unit,
     onRegisterClick: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -117,33 +138,23 @@ fun LoginInitial(
             stringResource(R.string.entrance_bank),
             style = MaterialTheme.typography.titleLarge
         )
-        Spacer(Modifier.height(96.dp))
-        OutlinedTextField(
-            loginTextFieldState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            label = {
-                Text(stringResource(R.string.login))
-            }
-        )
-        OutlinedTextField(
-            passwordTextFieldState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            label = {
-                Text(stringResource(R.string.password))
-            }
-        )
-        Spacer(Modifier.height(96.dp))
+        Spacer(Modifier.height(48.dp))
+        TextField(lastNameTextFieldState, stringResource(R.string.last_name))
+        TextField(firstNameTextFieldState, stringResource(R.string.first_name))
+        TextField(middleNameTextFieldState, stringResource(R.string.middle_name))
 
-        Button(onEnterClick) {
-            Text(stringResource(R.string.enter))
-        }
+        TextField(loginTextFieldState, stringResource(R.string.login))
+        TextField(passwordTextFieldState, stringResource(R.string.password))
+
+        Spacer(Modifier.height(48.dp))
+
         Button(onRegisterClick) {
-            Text(stringResource(R.string.registration))
+            Text(stringResource(R.string.register))
+        }
+        Button(onBackClick) {
+            Text(stringResource(R.string.back))
         }
     }
 }
+
 

@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.malevichrp.bbank.features.login.data.LoginRepository
-import ru.malevichrp.bbank.features.login.data.LoginResult
+import ru.malevichrp.bbank.features.login.domain.LoginRepository
+import ru.malevichrp.bbank.features.login.domain.LoginResult
 import javax.inject.Inject
 
 @HiltViewModel

@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,21 +36,26 @@ fun HomeScreen(snackbarHostState: SnackbarHostState) {
 
 }
 
+
 @JvmInline
-value class AccountId(val id: String)
+value class AccountId(val value: String)
+
+@Immutable
 data class AccountUi(
     val id: AccountId,
     val title: String,
-    val balance: MoneyRubles
+    val balance: Money
 )
 
 @Composable
 fun HomeScreenUi(
     fullName: String,
+    moneySpent: Money,
     accounts: List<AccountUi>,
     onProfileClick: () -> Unit,
     onOperationsClick: () -> Unit,
     onTransferMoneyClick: () -> Unit,
+    onTopUpClick: () -> Unit,
     onAccountClick: (AccountId) -> Unit
 ) {
     LazyColumn(
@@ -66,7 +72,7 @@ fun HomeScreenUi(
         }
         item {
             OperationsCard(
-                MoneyRubles(56_05800),
+                moneySpent,
                 onOperationsClick,
             )
         }
@@ -84,7 +90,7 @@ fun HomeScreenUi(
                     Text(stringResource(R.string.tranfer_money))
                 }
                 Button(
-                    onTransferMoneyClick,
+                    onTopUpClick,
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
@@ -96,7 +102,7 @@ fun HomeScreenUi(
         items(
             items = accounts,
             key = {
-                it.id
+                it.id.value
             }
         ) { account ->
             AccountCard(
@@ -112,21 +118,23 @@ fun HomeScreenUi(
 fun HomeScreenUiPreview() {
     HomeScreenUi(
         "Петров Иван Сергеевич",
+        moneySpent = Money(56_058_00),
         onProfileClick = {},
         onOperationsClick = {},
         onTransferMoneyClick = {},
         accounts = listOf(
-            AccountUi(AccountId("1"), "Дебетовая карта *9649", MoneyRubles(9_681_01)),
-            AccountUi(AccountId("2"), "Кредитная карта *5434", MoneyRubles(15_451_14)),
-            AccountUi(AccountId("3"), "Накопительный счет", MoneyRubles(65_681_31))
+            AccountUi(AccountId("1"), "Дебетовая карта *9649", Money(9_681_01)),
+            AccountUi(AccountId("2"), "Кредитная карта *5434", Money(15_451_14)),
+            AccountUi(AccountId("3"), "Накопительный счет", Money(65_681_31))
         ),
-        onAccountClick = {}
+        onAccountClick = {},
+        onTopUpClick = {}
     )
 }
 
 @Composable
 fun OperationsCard(
-    moneySpent: MoneyRubles,
+    moneySpent: Money,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -146,7 +154,7 @@ fun OperationsCard(
             modifier = Modifier.padding(16.dp),
         ) {
             Text(
-                "Все операции",
+                stringResource(R.string.all_operations),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
@@ -230,13 +238,4 @@ fun AccountCard(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun ProfileCardPreview() {
-    ProfileCard(
-        fullName = "Петров Иван Сергеевич",
-        onClick = {}
-    )
 }

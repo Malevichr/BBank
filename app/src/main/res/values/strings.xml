@@ -16,4 +16,5 @@
     <string name="back">Назад</string>
     <string name="tranfer_money">Перевести</string>
     <string name="top_up">Пополнить</string>
+    <string name="all_operations">Все операции</string>
 </resources>

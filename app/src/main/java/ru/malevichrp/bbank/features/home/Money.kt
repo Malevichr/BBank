@@ -3,7 +3,7 @@ package ru.malevichrp.bbank.features.home
 import kotlin.math.abs
 
 @JvmInline
-value class MoneyRubles(
+value class Money(
     val minor: Long
 ) {
     fun formatted(): String {

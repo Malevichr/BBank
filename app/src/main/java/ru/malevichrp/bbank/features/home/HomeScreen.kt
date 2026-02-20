@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,30 +29,46 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.malevichrp.bbank.R
+import ru.malevichrp.bbank.features.home.domain.AccountData
+import ru.malevichrp.bbank.features.home.domain.Money
 
 
 @Composable
-fun HomeScreen(snackbarHostState: SnackbarHostState) {
-
+fun HomeScreen(
+    viewModel: HomeViewModel,
+    snackbarHostState: SnackbarHostState,
+    onProfileClick: () -> Unit,
+    onOperationsClick: () -> Unit,
+    onTransferMoneyClick: () -> Unit,
+    onTopUpClick: () -> Unit,
+    onAccountClick: (AccountId) -> Unit
+) {
+    val fullName = viewModel.fullName.collectAsStateWithLifecycle()
+    val moneySpent = viewModel.moneySpent.collectAsStateWithLifecycle()
+    val accounts = viewModel.accounts.collectAsStateWithLifecycle()
+    HomeScreenUi(
+        fullName = fullName.value,
+        moneySpent = moneySpent.value,
+        accounts = accounts.value,
+        onProfileClick = onProfileClick,
+        onOperationsClick = onOperationsClick,
+        onTransferMoneyClick = onTransferMoneyClick,
+        onTopUpClick = onTopUpClick,
+        onAccountClick = onAccountClick
+    ) 
 }
 
 
 @JvmInline
 value class AccountId(val value: String)
 
-@Immutable
-data class AccountUi(
-    val id: AccountId,
-    val title: String,
-    val balance: Money
-)
-
 @Composable
 fun HomeScreenUi(
     fullName: String,
     moneySpent: Money,
-    accounts: List<AccountUi>,
+    accounts: List<AccountData>,
     onProfileClick: () -> Unit,
     onOperationsClick: () -> Unit,
     onTransferMoneyClick: () -> Unit,
@@ -123,9 +140,9 @@ fun HomeScreenUiPreview() {
         onOperationsClick = {},
         onTransferMoneyClick = {},
         accounts = listOf(
-            AccountUi(AccountId("1"), "Дебетовая карта *9649", Money(9_681_01)),
-            AccountUi(AccountId("2"), "Кредитная карта *5434", Money(15_451_14)),
-            AccountUi(AccountId("3"), "Накопительный счет", Money(65_681_31))
+            AccountData(AccountId("1"), "Дебетовая карта *9649", Money(9_681_01)),
+            AccountData(AccountId("2"), "Кредитная карта *5434", Money(15_451_14)),
+            AccountData(AccountId("3"), "Накопительный счет", Money(65_681_31))
         ),
         onAccountClick = {},
         onTopUpClick = {}
@@ -197,9 +214,9 @@ fun ProfileCard(
                 fullName,
                 style = MaterialTheme.typography.titleLarge,
             )
-            Text(
-                " >",
-                style = MaterialTheme.typography.titleLarge,
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null
             )
         }
     }
@@ -207,7 +224,7 @@ fun ProfileCard(
 
 @Composable
 fun AccountCard(
-    accountUi: AccountUi,
+    accountData: AccountData,
     onClick: (AccountId) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -215,7 +232,7 @@ fun AccountCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         onClick = {
-            onClick(accountUi.id)
+            onClick(accountData.id)
         },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
@@ -229,11 +246,11 @@ fun AccountCard(
             modifier = Modifier.padding(16.dp),
         ) {
             Text(
-                accountUi.balance.formatted(),
+                accountData.balance.formatted(),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
-                accountUi.title,
+                accountData.title,
                 style = MaterialTheme.typography.titleMedium,
             )
         }

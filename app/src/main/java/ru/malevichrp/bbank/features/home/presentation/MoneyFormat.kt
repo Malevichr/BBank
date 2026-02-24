@@ -1,4 +1,4 @@
-package ru.malevichrp.bbank.features.home
+package ru.malevichrp.bbank.features.home.presentation
 
 import ru.malevichrp.bbank.features.home.domain.Money
 import kotlin.math.abs

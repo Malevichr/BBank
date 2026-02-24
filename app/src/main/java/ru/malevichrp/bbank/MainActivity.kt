@@ -19,11 +19,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.malevichrp.bbank.features.home.HomeRoute
+import ru.malevichrp.bbank.features.home.HomeScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginRoute
 import ru.malevichrp.bbank.features.login.presentation.LoginScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginViewModel
-import ru.malevichrp.bbank.features.main.MainFake
-import ru.malevichrp.bbank.features.main.MainRoute
 import ru.malevichrp.bbank.features.registration.presentation.RegistrationRoute
 import ru.malevichrp.bbank.features.registration.presentation.RegistrationScreen
 import ru.malevichrp.bbank.features.registration.presentation.RegistrationViewModel
@@ -76,7 +76,7 @@ fun BBankNavHost(
                 hiltViewModel<LoginViewModel>(),
                 snackbarHostState,
                 {
-                    navController.navigate(MainRoute) {
+                    navController.navigate(HomeRoute) {
                         popUpTo(LoginRoute) { inclusive = true }
                     }
                 },
@@ -90,15 +90,15 @@ fun BBankNavHost(
                 hiltViewModel<RegistrationViewModel>(),
                 snackbarHostState,
                 {
-                    navController.navigate(MainRoute)
+                    navController.navigate(HomeRoute)
                 },
                 {
                     navController.popBackStack()
                 }
             )
         }
-        composable<MainRoute> {
-            MainFake()
+        composable<HomeRoute> {
+            HomeScreen(snackbarHostState)
         }
     }
 }

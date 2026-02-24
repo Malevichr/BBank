@@ -1,7 +1,7 @@
-package ru.malevichrp.bbank.features.main
+package ru.malevichrp.bbank.features.home.presentation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object MainRoute : NavKey
+data object HomeRoute : NavKey

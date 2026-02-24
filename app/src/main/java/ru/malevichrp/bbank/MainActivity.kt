@@ -19,8 +19,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ru.malevichrp.bbank.features.home.HomeRoute
-import ru.malevichrp.bbank.features.home.HomeScreen
+import ru.malevichrp.bbank.features.home.items.accounts.AccountListViewModel
+import ru.malevichrp.bbank.features.home.items.operations.SpentMoneyViewModel
+import ru.malevichrp.bbank.features.home.items.profile.FullNameViewModel
+import ru.malevichrp.bbank.features.home.presentation.HomeNavigateContainer
+import ru.malevichrp.bbank.features.home.presentation.HomeRoute
+import ru.malevichrp.bbank.features.home.presentation.HomeScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginRoute
 import ru.malevichrp.bbank.features.login.presentation.LoginScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginViewModel
@@ -98,7 +102,19 @@ fun BBankNavHost(
             )
         }
         composable<HomeRoute> {
-            HomeScreen(snackbarHostState)
+            HomeScreen(
+                fullNameViewModel = hiltViewModel<FullNameViewModel>(),
+                spentMoneyViewModel = hiltViewModel<SpentMoneyViewModel>(),
+                accountListViewModel = hiltViewModel<AccountListViewModel>(),
+                navigate = HomeNavigateContainer(
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                ),
+                snackbarHostState = snackbarHostState
+            )
         }
     }
 }

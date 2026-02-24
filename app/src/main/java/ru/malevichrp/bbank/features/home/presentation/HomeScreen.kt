@@ -22,6 +22,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.merge
 import ru.malevichrp.bbank.R
 import ru.malevichrp.bbank.features.home.domain.AccountData
@@ -62,9 +63,11 @@ fun HomeScreen(
                 fullNameViewModel.errorEffect,
                 spentMoneyViewModel.errorEffect,
                 accountListViewModel.errorEffect
-            ).collect { message ->
-                snackbarHostState.showSnackbar(message)
-            }
+            )
+                .distinctUntilChanged()
+                .collect { message ->
+                    snackbarHostState.showSnackbar(message)
+                }
         }
     }
     HomeScreenUi(

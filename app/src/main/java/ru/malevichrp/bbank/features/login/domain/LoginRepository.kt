@@ -14,7 +14,7 @@ interface LoginRepository {
             delay(2000)
             if (shouldError) {
                 shouldError = false
-                return LoginResult.Error(DomainError.WrongLoginData)
+                return LoginResult.Error(LoginDomainError.WrongLoginData)
             }
             return LoginResult.Success
         }

@@ -44,6 +44,8 @@ fun RegistrationScreen(
     val loginTextFieldState = rememberTextFieldState()
     val passwordTextFieldState = rememberTextFieldState()
 
+    val phoneTextFieldState = rememberTextFieldState()
+
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { state ->
@@ -64,6 +66,7 @@ fun RegistrationScreen(
         middleNameTextFieldState,
         loginTextFieldState,
         passwordTextFieldState,
+        phoneTextFieldState,
         state.value,
         {
             val registrationData = RegistrationData(
@@ -71,7 +74,8 @@ fun RegistrationScreen(
                 firstNameTextFieldState.text.toString(),
                 middleNameTextFieldState.text.toString(),
                 loginTextFieldState.text.toString(),
-                passwordTextFieldState.text.toString()
+                passwordTextFieldState.text.toString(),
+                phoneTextFieldState.text.toString()
             )
             viewModel.register(
                 registrationData
@@ -88,6 +92,7 @@ fun RegistrationScreenUi(
     middleNameTextFieldState: TextFieldState,
     loginTextFieldState: TextFieldState,
     passwordTextFieldState: TextFieldState,
+    phoneTextFieldState: TextFieldState,
     state: RegistrationUiState,
     onRegisterClick: () -> Unit,
     onBackClick: () -> Unit,
@@ -106,6 +111,7 @@ fun RegistrationScreenUi(
                 middleNameTextFieldState,
                 loginTextFieldState,
                 passwordTextFieldState,
+                phoneTextFieldState,
                 onRegisterClick,
                 onBackClick,
                 modifier = Modifier
@@ -127,6 +133,7 @@ fun RegistrationInitial(
     middleNameTextFieldState: TextFieldState,
     loginTextFieldState: TextFieldState,
     passwordTextFieldState: TextFieldState,
+    phoneTextFieldState: TextFieldState,
     onRegisterClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -146,6 +153,8 @@ fun RegistrationInitial(
 
         TextField(loginTextFieldState, stringResource(R.string.login))
         TextField(passwordTextFieldState, stringResource(R.string.password))
+
+        TextField(phoneTextFieldState, stringResource(R.string.phone_number))
 
         Spacer(Modifier.height(48.dp))
 

@@ -18,12 +18,12 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: LoginRepository,
-    private val errorMapper: ErrorResourceMapper
+    private val errorMapper: LoginErrorMapper
 ) : ViewModel() {
     val state: StateFlow<LoginUiState> =
         savedStateHandle.getStateFlow(KEY, LoginUiState.Initial)
 
-    private val _uiEffect = MutableSharedFlow<UiEffect>(
+    private val _uiEffect = MutableSharedFlow<LoginUiEffect>(
         extraBufferCapacity = 1
     )
     val uiEffect = _uiEffect.asSharedFlow()
@@ -34,11 +34,11 @@ class LoginViewModel @Inject constructor(
             val result = repository.login(login, password)
             withContext(Dispatchers.Main) {
                 when (result) {
-                    is LoginResult.Success -> _uiEffect.tryEmit(UiEffect.SuccessLogin)
+                    is LoginResult.Success -> _uiEffect.tryEmit(LoginUiEffect.SuccessLogin)
                     is LoginResult.Error -> {
                         savedStateHandle[KEY] = LoginUiState.Initial
                         _uiEffect.tryEmit(
-                            UiEffect.ShowError(result.exception.map(errorMapper))
+                            LoginUiEffect.ShowError(result.exception.map(errorMapper))
                         )
                     }
                 }

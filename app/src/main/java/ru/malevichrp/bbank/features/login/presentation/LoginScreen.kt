@@ -45,9 +45,9 @@ fun LoginScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { state ->
                 when (state) {
-                    is UiEffect.SuccessLogin -> onSuccessLogin()
+                    is LoginUiEffect.SuccessLogin -> onSuccessLogin()
 
-                    is UiEffect.ShowError -> {
+                    is LoginUiEffect.ShowError -> {
                         snackbarHostState.showSnackbar(state.error)
                     }
                 }

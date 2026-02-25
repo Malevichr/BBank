@@ -6,4 +6,5 @@ data class RegistrationData(
     val middleName: String,
     val login: String,
     val password: String,
+    val phone: String
 )

@@ -18,4 +18,7 @@
     <string name="top_up">Пополнить</string>
     <string name="all_operations">Все операции</string>
     <string name="retry_load">Повторить загрузку</string>
+    <string name="log_out">Выйти из аккаунта</string>
+    <string name="profile_avatar">Аватар профиля</string>
+    <string name="settings">Настройки</string>
 </resources>

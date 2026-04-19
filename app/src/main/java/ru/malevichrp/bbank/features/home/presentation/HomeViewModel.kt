@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import ru.malevichrp.bbank.core.LoadResult
+import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.domain.HomeRepository
-import ru.malevichrp.bbank.features.home.domain.HomeResult
 
 
 abstract class HomeViewModel<T>(
@@ -22,35 +23,28 @@ abstract class HomeViewModel<T>(
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val state: StateFlow<HomeLoadableState<T>> =
+    val state: StateFlow<LoadableUiState<T>> =
         retry.onStart { emit(Unit) }
             .flatMapLatest {
                 repository.load()
                     .map {
                         when (it) {
-                            is HomeResult.Success -> HomeLoadableState.Success(it.data)
-                            is HomeResult.Error -> {
-                                val message = it.domainError.map(errorMapper)
-                                errorEffect.tryEmit(message)
-                                HomeLoadableState.Error
+                            is LoadResult.Success -> LoadableUiState.Success(it.data)
+                            is LoadResult.Error -> {
+                                val error = it.domainError.map(errorMapper)
+                                errorEffect.tryEmit(error)
+                                LoadableUiState.Error
                             }
                         }
                     }
-                    .onStart { emit(HomeLoadableState.Loading) }
+                    .onStart { emit(LoadableUiState.Loading) }
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = HomeLoadableState.Loading
+                initialValue = LoadableUiState.Loading
             )
 
     fun retry() {
         retry.tryEmit(Unit)
     }
-}
-
-
-sealed interface HomeLoadableState<out T> {
-    data object Loading : HomeLoadableState<Nothing>
-    data class Success<out T>(val data: T) : HomeLoadableState<T>
-    data object Error : HomeLoadableState<Nothing>
 }

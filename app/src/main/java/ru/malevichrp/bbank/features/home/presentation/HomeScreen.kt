@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.merge
 import ru.malevichrp.bbank.R
+import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.domain.AccountData
 import ru.malevichrp.bbank.features.home.domain.AccountId
 import ru.malevichrp.bbank.features.home.domain.Money
@@ -39,9 +40,9 @@ import ru.malevichrp.bbank.features.home.items.profile.profileCard
 
 
 data class HomeUiStateContainer(
-    val profile: HomeLoadableState<String>,
-    val operations: HomeLoadableState<Money>,
-    val accounts: HomeLoadableState<List<AccountData>>,
+    val profile: LoadableUiState<String>,
+    val operations: LoadableUiState<Money>,
+    val accounts: LoadableUiState<List<AccountData>>,
 )
 
 @Composable
@@ -123,9 +124,9 @@ fun HomeScreenUi(
 fun HomeScreenPreview() {
     HomeScreenUi(
         HomeUiStateContainer(
-            profile = HomeLoadableState.Success("Петров Иван Сергеевич"),
-            operations = HomeLoadableState.Success(Money(1234552)),
-            accounts = HomeLoadableState.Success(
+            profile = LoadableUiState.Success("Петров Иван Сергеевич"),
+            operations = LoadableUiState.Success(Money(1234552)),
+            accounts = LoadableUiState.Success(
                 listOf(
                     AccountData(AccountId("1"), "Дебетовая карта *9649", Money(9_681_01)),
                     AccountData(AccountId("2"), "Кредитная карта *5434", Money(15_451_14)),
@@ -152,21 +153,21 @@ fun HomeScreenPreview() {
     ) {
         item {
             ProfileCardUi(
-                fullNameState = HomeLoadableState.Success("Петров Иван Сергеевич"),
+                fullNameState = LoadableUiState.Success("Петров Иван Сергеевич"),
                 onNavigateClick = {},
                 onRetryClick = {},
             )
         }
         item {
             OperationsCardUi(
-                operationsState = HomeLoadableState.Success(Money(1234552)),
+                operationsState = LoadableUiState.Success(Money(1234552)),
                 onNavigateClick = {},
                 onRetryClick = {},
             )
         }
         homeButtons({}, {})
         accountCardsUi(
-            accountsState = HomeLoadableState.Success(
+            accountsState = LoadableUiState.Success(
                 listOf(
                     AccountData(AccountId("1"), "Дебетовая карта *9649", Money(9_681_01)),
                     AccountData(AccountId("2"), "Кредитная карта *5434", Money(15_451_14)),

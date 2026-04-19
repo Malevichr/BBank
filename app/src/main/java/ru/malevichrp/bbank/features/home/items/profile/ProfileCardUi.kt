@@ -28,10 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.malevichrp.bbank.R
-import ru.malevichrp.bbank.features.home.presentation.HomeLoadableState
+import ru.malevichrp.bbank.core.LoadableUiState
 
 fun LazyListScope.profileCard(
-    fullNameState: HomeLoadableState<String>,
+    fullNameState: LoadableUiState<String>,
     onNavigateClick: () -> Unit,
     onRetryClick: () -> Unit,
 ) {
@@ -46,7 +46,7 @@ fun LazyListScope.profileCard(
 
 @Composable
 fun ProfileCardUi(
-    fullNameState: HomeLoadableState<String>,
+    fullNameState: LoadableUiState<String>,
     onNavigateClick: () -> Unit,
     onRetryClick: () -> Unit,
 ) {
@@ -56,9 +56,9 @@ fun ProfileCardUi(
             .height(72.dp),
         shape = RoundedCornerShape(20.dp),
         onClick = when (fullNameState) {
-            is HomeLoadableState.Success<*> -> onNavigateClick
-            is HomeLoadableState.Error -> onRetryClick
-            is HomeLoadableState.Loading -> ({})
+            is LoadableUiState.Success<*> -> onNavigateClick
+            is LoadableUiState.Error -> onRetryClick
+            is LoadableUiState.Loading -> ({})
         },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
@@ -69,7 +69,7 @@ fun ProfileCardUi(
         ),
     ) {
         when (fullNameState) {
-            is HomeLoadableState.Error -> {
+            is LoadableUiState.Error -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
@@ -82,13 +82,13 @@ fun ProfileCardUi(
                 }
             }
 
-            is HomeLoadableState.Loading -> {
+            is LoadableUiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
 
-            is HomeLoadableState.Success -> {
+            is LoadableUiState.Success -> {
                 Row(
                     modifier = Modifier.padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -116,7 +116,7 @@ fun ProfileCardUi(
 @Composable
 fun ProfileCardUiSuccessPreview() {
     ProfileCardUi(
-        fullNameState = HomeLoadableState.Success("Петров Иван Сергеевич"),
+        fullNameState = LoadableUiState.Success("Петров Иван Сергеевич"),
         onNavigateClick = {},
         onRetryClick = {},
     )
@@ -126,7 +126,7 @@ fun ProfileCardUiSuccessPreview() {
 @Composable
 fun ProfileCardUiErrorPreview() {
     ProfileCardUi(
-        fullNameState = HomeLoadableState.Error,
+        fullNameState = LoadableUiState.Error,
         onNavigateClick = {},
         onRetryClick = {},
     )
@@ -136,7 +136,7 @@ fun ProfileCardUiErrorPreview() {
 @Composable
 fun ProfileCardUiLoadingPreview() {
     ProfileCardUi(
-        fullNameState = HomeLoadableState.Loading,
+        fullNameState = LoadableUiState.Loading,
         onNavigateClick = {},
         onRetryClick = {},
     )

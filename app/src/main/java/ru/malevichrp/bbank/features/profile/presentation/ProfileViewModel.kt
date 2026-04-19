@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -26,8 +25,6 @@ class ProfileViewModel @Inject constructor(
     private val avatarRepository: AvatarRepository,
     private val errorMapper: HomeErrorMapper,
 ) : ViewModel() {
-    private val _state: MutableStateFlow<LoadableUiState<ProfileData>> =
-        MutableStateFlow(LoadableUiState.Error)
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val _errorOccurred = MutableSharedFlow<String>(
         extraBufferCapacity = 1

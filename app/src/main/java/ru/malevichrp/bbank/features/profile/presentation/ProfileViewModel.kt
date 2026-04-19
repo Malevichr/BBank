@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import ru.malevichrp.bbank.features.home.domain.HomeResult
+import ru.malevichrp.bbank.core.LoadResult
+import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.items.profile.FullNameRepository
 import ru.malevichrp.bbank.features.profile.data.AvatarRepository
 import ru.malevichrp.bbank.features.profile.data.AvatarResult
@@ -24,32 +25,30 @@ class ProfileViewModel @Inject constructor(
     private val nameRepository: FullNameRepository,
     private val avatarRepository: AvatarRepository
 ) : ViewModel() {
-    private val _state: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Error)
+    private val _state: MutableStateFlow<LoadableUiState<ProfileData>> =
+        MutableStateFlow(LoadableUiState.Error)
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val state: StateFlow<ProfileUiState> = retry.onStart { emit(Unit) }
+    val state: StateFlow<LoadableUiState<ProfileData>> = retry.onStart { emit(Unit) }
         .flatMapLatest {
             val name = nameRepository.load()
             val avatar = avatarRepository.load()
             combine(name, avatar) { name, avatar ->
-                when {
-                    name is HomeResult.Error -> {
-                        TODO("replase all with Asyncer")
-                    }
-                }
-                if (name is HomeResult.Error || avatar is AvatarResult.Error)
-                    ProfileUiState.Error
-                else ProfileUiState.Success(
-                    (name as HomeResult.Success<String>).data,
-                    (avatar as AvatarResult.Success).data
+                if (name is LoadResult.Error || avatar is AvatarResult.Error)
+                    LoadableUiState.Error
+                else LoadableUiState.Success(
+                    ProfileData(
+                        (name as LoadResult.Success<String>).data,
+                        (avatar as AvatarResult.Success).data
+                    )
                 )
-            }.onStart { emit(ProfileUiState.Loading) }
+            }.onStart { emit(LoadableUiState.Loading) }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ProfileUiState.Loading
+            initialValue = LoadableUiState.Loading
         )
     private val _errorOccurred = MutableSharedFlow<String>(
         extraBufferCapacity = 1

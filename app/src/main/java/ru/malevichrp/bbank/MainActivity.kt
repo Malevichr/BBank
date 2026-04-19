@@ -28,6 +28,9 @@ import ru.malevichrp.bbank.features.home.presentation.HomeScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginRoute
 import ru.malevichrp.bbank.features.login.presentation.LoginScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginViewModel
+import ru.malevichrp.bbank.features.profile.presentation.ProfileRoute
+import ru.malevichrp.bbank.features.profile.presentation.ProfileScreen
+import ru.malevichrp.bbank.features.profile.presentation.ProfileViewModel
 import ru.malevichrp.bbank.features.registration.presentation.RegistrationRoute
 import ru.malevichrp.bbank.features.registration.presentation.RegistrationScreen
 import ru.malevichrp.bbank.features.registration.presentation.RegistrationViewModel
@@ -107,12 +110,24 @@ fun BBankNavHost(
                 spentMoneyViewModel = hiltViewModel<SpentMoneyViewModel>(),
                 accountListViewModel = hiltViewModel<AccountListViewModel>(),
                 navigate = HomeNavigateContainer(
-                    {},
+                    {
+                        navController.navigate(ProfileRoute)
+                    },
                     {},
                     {},
                     {},
                     {},
                 ),
+                snackbarHostState = snackbarHostState
+            )
+        }
+        composable<ProfileRoute> {
+            ProfileScreen(
+                viewModel = hiltViewModel<ProfileViewModel>(),
+                backNavigate = {
+                    navController.popBackStack()
+                },
+                settingsNavigate = {},
                 snackbarHostState = snackbarHostState
             )
         }

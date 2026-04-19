@@ -19,4 +19,7 @@
     <string name="all_operations">Все операции</string>
     <string name="retry_load">Повторить загрузку</string>
     <string name="phone_number">Номер телефона</string>
+    <string name="log_out">Выйти из аккаунта</string>
+    <string name="profile_avatar">Аватар профиля</string>
+    <string name="settings">Настройки</string>
 </resources>

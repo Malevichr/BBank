@@ -3,10 +3,10 @@ package ru.malevichrp.bbank.features.home.items.accounts
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.malevichrp.bbank.core.DomainError
 import ru.malevichrp.bbank.core.LoadResult
 import ru.malevichrp.bbank.features.home.domain.AccountData
 import ru.malevichrp.bbank.features.home.domain.AccountId
-import ru.malevichrp.bbank.features.home.domain.HomeDomainError
 import ru.malevichrp.bbank.features.home.domain.HomeRepository
 import ru.malevichrp.bbank.features.home.domain.Money
 import javax.inject.Inject
@@ -18,7 +18,7 @@ interface AccountListRepository : HomeRepository<List<AccountData>> {
             delay(2000)
             if (shouldError) {
                 shouldError = false
-                emit(LoadResult.Error(HomeDomainError.Common))
+                emit(LoadResult.Error(DomainError.Common))
             } else {
                 emit(
                     LoadResult.Success(

@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,14 +30,41 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.AsyncImage
+import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.malevichrp.bbank.R
 import ru.malevichrp.bbank.core.LoadableUiState
 import java.io.File
 
 @Composable
-fun ProfileScreen(snackbarHostState: SnackbarHostState) {
-    //todo
+fun ProfileScreen(
+    viewModel: ProfileViewModel,
+    backNavigate: () -> Unit,
+    settingsNavigate: () -> Unit,
+    snackbarHostState: SnackbarHostState
+) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.errorOccurred
+                .distinctUntilChanged()
+                .collect { message ->
+                    snackbarHostState.showSnackbar(message)
+                }
+        }
+    }
+    ProfileScreenUi(
+        state = state.value,
+        onBackClick = backNavigate,
+        onSettingsClick = settingsNavigate,
+        onLogOutClick = viewModel::logout,
+        onRetryClick = viewModel::retry
+    )
 }
 
 @Composable

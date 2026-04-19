@@ -17,7 +17,6 @@ import ru.malevichrp.bbank.core.LoadResult
 import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.items.profile.FullNameRepository
 import ru.malevichrp.bbank.features.profile.data.AvatarRepository
-import ru.malevichrp.bbank.features.profile.data.AvatarResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +27,10 @@ class ProfileViewModel @Inject constructor(
     private val _state: MutableStateFlow<LoadableUiState<ProfileData>> =
         MutableStateFlow(LoadableUiState.Error)
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-
+    private val _errorOccurred = MutableSharedFlow<String>(
+        extraBufferCapacity = 1
+    )
+    val errorOccurred = _errorOccurred.asSharedFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<LoadableUiState<ProfileData>> = retry.onStart { emit(Unit) }
@@ -36,12 +38,15 @@ class ProfileViewModel @Inject constructor(
             val name = nameRepository.load()
             val avatar = avatarRepository.load()
             combine(name, avatar) { name, avatar ->
-                if (name is LoadResult.Error || avatar is AvatarResult.Error)
+                if (name is LoadResult.Error) {
+                    name.domainError.map()
+                    LoadableUiState.Error
+                } else if (avatar is LoadResult.Error)
                     LoadableUiState.Error
                 else LoadableUiState.Success(
                     ProfileData(
                         (name as LoadResult.Success<String>).data,
-                        (avatar as AvatarResult.Success).data
+                        (avatar as LoadResult.Success).data
                     )
                 )
             }.onStart { emit(LoadableUiState.Loading) }
@@ -50,10 +55,7 @@ class ProfileViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = LoadableUiState.Loading
         )
-    private val _errorOccurred = MutableSharedFlow<String>(
-        extraBufferCapacity = 1
-    )
-    val errorOccurred = _errorOccurred.asSharedFlow()
+
 
     fun retry() {
 

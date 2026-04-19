@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.malevichrp.bbank.R
+import ru.malevichrp.bbank.core.LoadableUiState
 import java.io.File
 
 @Composable
@@ -40,7 +41,7 @@ fun ProfileScreen(snackbarHostState: SnackbarHostState) {
 
 @Composable
 fun ProfileScreenUi(
-    state: ProfileUiState,
+    state: LoadableUiState<ProfileData>,
     onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onLogOutClick: () -> Unit,
@@ -74,9 +75,9 @@ fun ProfileScreenUi(
                 .fillMaxWidth()
         ) {
             when (state) {
-                is ProfileUiState.Error -> ProfileError(onRetryClick)
-                is ProfileUiState.Loading -> ProfileLoading()
-                is ProfileUiState.Success -> ProfileSuccess(
+                is LoadableUiState.Error -> ProfileError(onRetryClick)
+                is LoadableUiState.Loading -> ProfileLoading()
+                is LoadableUiState.Success -> ProfileSuccess(
                     state
                 )
             }
@@ -99,14 +100,14 @@ fun ProfileLoading() {
 
 @Composable
 fun ProfileSuccess(
-    state: ProfileUiState.Success
+    state: LoadableUiState.Success<ProfileData>
 ) {
     Column(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when (state.profileImageSource) {
+        when (state.data.profileImageSource) {
             is ImageSource.Empty -> Icon(
                 imageVector = Icons.Outlined.AccountCircle,
                 contentDescription = stringResource(R.string.profile_avatar),
@@ -116,7 +117,7 @@ fun ProfileSuccess(
 
             is ImageSource.Storage -> {
                 AsyncImage(
-                    model = File(state.profileImageSource.path),
+                    model = File(state.data.profileImageSource.path),
                     contentDescription = stringResource(R.string.profile_avatar),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -126,7 +127,7 @@ fun ProfileSuccess(
             }
         }
         Spacer(Modifier.height(32.dp))
-        Text(state.fullName, style = MaterialTheme.typography.titleLarge)
+        Text(state.data.fullName, style = MaterialTheme.typography.titleLarge)
     }
 }
 
@@ -145,9 +146,11 @@ fun ProfileError(onRetryClick: () -> Unit) {
 @Composable
 private fun ProfileScreenSuccessPreview() {
     ProfileScreenUi(
-        ProfileUiState.Success(
-            "Петров Иван Сергеевич",
-            ImageSource.Empty
+        LoadableUiState.Success(
+            ProfileData(
+                "Петров Иван Сергеевич",
+                ImageSource.Empty
+            )
         ),
         {},
         {},
@@ -160,7 +163,7 @@ private fun ProfileScreenSuccessPreview() {
 @Composable
 private fun ProfileScreenLoadingPreview() {
     ProfileScreenUi(
-        ProfileUiState.Loading,
+        LoadableUiState.Loading,
         {},
         {},
         {},
@@ -172,7 +175,7 @@ private fun ProfileScreenLoadingPreview() {
 @Composable
 private fun ProfileScreenErrorPreview() {
     ProfileScreenUi(
-        ProfileUiState.Error,
+        LoadableUiState.Error,
         {},
         {},
         {},

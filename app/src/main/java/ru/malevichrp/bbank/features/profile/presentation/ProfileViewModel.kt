@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import ru.malevichrp.bbank.core.LoadResult
 import ru.malevichrp.bbank.core.LoadableUiState
+import ru.malevichrp.bbank.coreui.DomainErrorMapper
 import ru.malevichrp.bbank.features.home.items.profile.FullNameRepository
-import ru.malevichrp.bbank.features.home.presentation.HomeErrorMapper
 import ru.malevichrp.bbank.features.profile.data.AvatarRepository
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val nameRepository: FullNameRepository,
     private val avatarRepository: AvatarRepository,
-    private val errorMapper: HomeErrorMapper,
+    private val errorMapper: DomainErrorMapper,
 ) : ViewModel() {
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val _errorOccurred = MutableSharedFlow<String>(
@@ -45,8 +45,7 @@ class ProfileViewModel @Inject constructor(
                 } else if (avatar is LoadResult.Error) {
                     _errorOccurred.emit(avatar.domainError.map(errorMapper))
                     LoadableUiState.Error
-                }
-                else LoadableUiState.Success(
+                } else LoadableUiState.Success(
                     ProfileData(
                         (name as LoadResult.Success<String>).data,
                         (avatar as LoadResult.Success).data
@@ -58,7 +57,7 @@ class ProfileViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = LoadableUiState.Loading
         )
-    
+
     fun retry() {
         retry.tryEmit(Unit)
     }

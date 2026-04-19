@@ -39,6 +39,7 @@ class ProfileViewModel @Inject constructor(
 
             combine(name, avatar) { name, avatar ->
                 if (name is LoadResult.Error) {
+
                     _errorOccurred.emit(name.domainError.map(errorMapper))
                     LoadableUiState.Error
                 } else if (avatar is LoadResult.Error) {
@@ -57,8 +58,7 @@ class ProfileViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = LoadableUiState.Loading
         )
-
-
+    
     fun retry() {
         retry.tryEmit(Unit)
     }

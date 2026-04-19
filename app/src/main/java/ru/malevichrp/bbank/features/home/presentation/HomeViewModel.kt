@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import ru.malevichrp.bbank.core.LoadResult
 import ru.malevichrp.bbank.core.LoadableUiState
+import ru.malevichrp.bbank.coreui.DomainErrorMapper
 import ru.malevichrp.bbank.features.home.domain.HomeRepository
 
 
 abstract class HomeViewModel<T>(
     private val repository: HomeRepository<T>,
-    private val errorMapper: HomeErrorMapper
+    private val errorMapper: DomainErrorMapper
 ) : ViewModel() {
     val errorEffect = MutableSharedFlow<String>(extraBufferCapacity = 1)
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)

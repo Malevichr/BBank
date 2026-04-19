@@ -6,5 +6,4 @@ import ru.malevichrp.bbank.features.profile.presentation.ImageSource
 
 interface AvatarRepository {
     fun load(): Flow<LoadResult<ImageSource>>
-
 }

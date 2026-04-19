@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,16 +15,16 @@ import kotlinx.coroutines.flow.stateIn
 import ru.malevichrp.bbank.core.LoadResult
 import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.items.profile.FullNameRepository
+import ru.malevichrp.bbank.features.home.presentation.HomeErrorMapper
 import ru.malevichrp.bbank.features.profile.data.AvatarRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val nameRepository: FullNameRepository,
-    private val avatarRepository: AvatarRepository
+    private val avatarRepository: AvatarRepository,
+    private val errorMapper: HomeErrorMapper,
 ) : ViewModel() {
-    private val _state: MutableStateFlow<LoadableUiState<ProfileData>> =
-        MutableStateFlow(LoadableUiState.Error)
     private val retry = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val _errorOccurred = MutableSharedFlow<String>(
         extraBufferCapacity = 1
@@ -37,12 +36,16 @@ class ProfileViewModel @Inject constructor(
         .flatMapLatest {
             val name = nameRepository.load()
             val avatar = avatarRepository.load()
+
             combine(name, avatar) { name, avatar ->
                 if (name is LoadResult.Error) {
-                    name.domainError.map()
+
+                    _errorOccurred.emit(name.domainError.map(errorMapper))
                     LoadableUiState.Error
-                } else if (avatar is LoadResult.Error)
+                } else if (avatar is LoadResult.Error) {
+                    _errorOccurred.emit(avatar.domainError.map(errorMapper))
                     LoadableUiState.Error
+                }
                 else LoadableUiState.Success(
                     ProfileData(
                         (name as LoadResult.Success<String>).data,
@@ -55,13 +58,12 @@ class ProfileViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = LoadableUiState.Loading
         )
-
-
+    
     fun retry() {
-
+        retry.tryEmit(Unit)
     }
 
     fun logout() {
-
+        //todo add LogoutUseCase
     }
 }

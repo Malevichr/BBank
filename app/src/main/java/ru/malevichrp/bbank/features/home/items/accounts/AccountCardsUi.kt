@@ -30,20 +30,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.malevichrp.bbank.R
+import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.domain.AccountData
 import ru.malevichrp.bbank.features.home.domain.AccountId
 import ru.malevichrp.bbank.features.home.domain.Money
-import ru.malevichrp.bbank.features.home.presentation.HomeLoadableState
 import ru.malevichrp.bbank.features.home.presentation.formatted
 
 
 fun LazyListScope.accountCardsUi(
-    accountsState: HomeLoadableState<List<AccountData>>,
+    accountsState: LoadableUiState<List<AccountData>>,
     onNavigateClick: (AccountId) -> Unit,
     onRetryClick: () -> Unit,
 ) {
     when (accountsState) {
-        is HomeLoadableState.Error -> {
+        is LoadableUiState.Error -> {
             item {
                 Box(
                     modifier = Modifier
@@ -64,7 +64,7 @@ fun LazyListScope.accountCardsUi(
             }
         }
 
-        is HomeLoadableState.Loading -> {
+        is LoadableUiState.Loading -> {
             item {
                 Box(
                     modifier = Modifier
@@ -77,7 +77,7 @@ fun LazyListScope.accountCardsUi(
             }
         }
 
-        is HomeLoadableState.Success -> {
+        is LoadableUiState.Success -> {
             items(
                 items = accountsState.data,
                 key = {
@@ -139,7 +139,7 @@ fun AccountsUiSuccessPreview() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         accountCardsUi(
-            accountsState = HomeLoadableState.Success(
+            accountsState = LoadableUiState.Success(
                 listOf(
                     AccountData(AccountId("1"), "Дебетовая карта *9649", Money(9_681_01)),
                     AccountData(AccountId("2"), "Кредитная карта *5434", Money(15_451_14)),
@@ -162,7 +162,7 @@ fun AccountsUiErrorPreview() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         accountCardsUi(
-            accountsState = HomeLoadableState.Error,
+            accountsState = LoadableUiState.Error,
             onNavigateClick = {},
             onRetryClick = {}
         )
@@ -179,7 +179,7 @@ fun AccountsUiLoadingPreview() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         accountCardsUi(
-            accountsState = HomeLoadableState.Loading,
+            accountsState = LoadableUiState.Loading,
             onNavigateClick = {},
             onRetryClick = {}
         )

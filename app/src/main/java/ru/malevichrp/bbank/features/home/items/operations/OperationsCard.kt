@@ -26,13 +26,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.malevichrp.bbank.R
+import ru.malevichrp.bbank.core.LoadableUiState
 import ru.malevichrp.bbank.features.home.domain.Money
-import ru.malevichrp.bbank.features.home.presentation.HomeLoadableState
 import ru.malevichrp.bbank.features.home.presentation.formatted
 
 
 fun LazyListScope.operationsCard(
-    operationsState: HomeLoadableState<Money>,
+    operationsState: LoadableUiState<Money>,
     onNavigateClick: () -> Unit,
     onRetryClick: () -> Unit,
 ) {
@@ -47,7 +47,7 @@ fun LazyListScope.operationsCard(
 
 @Composable
 fun OperationsCardUi(
-    operationsState: HomeLoadableState<Money>,
+    operationsState: LoadableUiState<Money>,
     onNavigateClick: () -> Unit,
     onRetryClick: () -> Unit,
 ) {
@@ -57,9 +57,9 @@ fun OperationsCardUi(
             .height(96.dp),
         shape = RoundedCornerShape(20.dp),
         onClick = when (operationsState) {
-            is HomeLoadableState.Success<*> -> onNavigateClick
-            is HomeLoadableState.Error -> onRetryClick
-            is HomeLoadableState.Loading -> ({})
+            is LoadableUiState.Success<*> -> onNavigateClick
+            is LoadableUiState.Error -> onRetryClick
+            is LoadableUiState.Loading -> ({})
         },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
@@ -70,7 +70,7 @@ fun OperationsCardUi(
         ),
     ) {
         when (operationsState) {
-            is HomeLoadableState.Error -> {
+            is LoadableUiState.Error -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
@@ -83,13 +83,13 @@ fun OperationsCardUi(
                 }
             }
 
-            is HomeLoadableState.Loading -> {
+            is LoadableUiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
 
-            is HomeLoadableState.Success -> {
+            is LoadableUiState.Success -> {
                 Row(
                     modifier = Modifier.padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -116,7 +116,7 @@ fun OperationsCardUi(
 @Composable
 fun OperationsCardUiSuccessPreview() {
     OperationsCardUi(
-        operationsState = HomeLoadableState.Success(Money(1234552)),
+        operationsState = LoadableUiState.Success(Money(1234552)),
         onNavigateClick = {},
         onRetryClick = {},
     )
@@ -126,7 +126,7 @@ fun OperationsCardUiSuccessPreview() {
 @Composable
 fun OperationsCardUiErrorPreview() {
     OperationsCardUi(
-        operationsState = HomeLoadableState.Error,
+        operationsState = LoadableUiState.Error,
         onNavigateClick = {},
         onRetryClick = {},
     )
@@ -136,7 +136,7 @@ fun OperationsCardUiErrorPreview() {
 @Composable
 fun OperationsCardUiLoadingPreview() {
     OperationsCardUi(
-        operationsState = HomeLoadableState.Loading,
+        operationsState = LoadableUiState.Loading,
         onNavigateClick = {},
         onRetryClick = {},
     )

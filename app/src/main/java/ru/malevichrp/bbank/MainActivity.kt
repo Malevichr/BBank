@@ -28,6 +28,9 @@ import ru.malevichrp.bbank.features.home.presentation.HomeScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginRoute
 import ru.malevichrp.bbank.features.login.presentation.LoginScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginViewModel
+import ru.malevichrp.bbank.features.operations.presentation.OperationsRoute
+import ru.malevichrp.bbank.features.operations.presentation.OperationsScreen
+import ru.malevichrp.bbank.features.operations.presentation.OperationsViewModel
 import ru.malevichrp.bbank.features.profile.presentation.ProfileRoute
 import ru.malevichrp.bbank.features.profile.presentation.ProfileScreen
 import ru.malevichrp.bbank.features.profile.presentation.ProfileViewModel
@@ -113,7 +116,9 @@ fun BBankNavHost(
                     {
                         navController.navigate(ProfileRoute)
                     },
-                    {},
+                    {
+                        navController.navigate(OperationsRoute)
+                    },
                     {},
                     {},
                     {},
@@ -129,6 +134,13 @@ fun BBankNavHost(
                 },
                 settingsNavigate = {},
                 snackbarHostState = snackbarHostState
+            )
+        }
+        composable<OperationsRoute> {
+            OperationsScreen(
+                viewModel = hiltViewModel<OperationsViewModel>(),
+                onBackClick = navController::popBackStack,
+                navigateDetails = {}
             )
         }
     }

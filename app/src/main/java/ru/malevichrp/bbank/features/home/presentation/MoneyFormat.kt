@@ -15,3 +15,7 @@ fun Money.formatted(): String {
         "$sign$rub,$kopPart ₽"
     }
 }
+fun Money.formattedWithPlus(): String {
+    val sign = if (minor > 0) "+" else ""
+    return sign + formatted()
+}

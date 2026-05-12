@@ -1,6 +1,6 @@
 package ru.malevichrp.bbank.features.home.presentation
 
-import ru.malevichrp.bbank.features.home.domain.AccountId
+import ru.malevichrp.bbank.core.AccountId
 
 data class HomeNavigateContainer(
     val profile: () -> Unit,

@@ -28,6 +28,9 @@ import ru.malevichrp.bbank.features.home.presentation.HomeScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginRoute
 import ru.malevichrp.bbank.features.login.presentation.LoginScreen
 import ru.malevichrp.bbank.features.login.presentation.LoginViewModel
+import ru.malevichrp.bbank.features.operationdetails.presentation.OperationDetailsRoute
+import ru.malevichrp.bbank.features.operationdetails.presentation.OperationDetailsScreen
+import ru.malevichrp.bbank.features.operationdetails.presentation.OperationDetailsViewModel
 import ru.malevichrp.bbank.features.operations.presentation.OperationsRoute
 import ru.malevichrp.bbank.features.operations.presentation.OperationsScreen
 import ru.malevichrp.bbank.features.operations.presentation.OperationsViewModel
@@ -140,7 +143,16 @@ fun BBankNavHost(
             OperationsScreen(
                 viewModel = hiltViewModel<OperationsViewModel>(),
                 onBackClick = navController::popBackStack,
-                navigateDetails = {}
+                navigateDetails = { navController.navigate(OperationDetailsRoute) },
+                snackbarHostState = snackbarHostState
+            )
+        }
+        composable<OperationDetailsRoute> {
+            OperationDetailsScreen(
+                viewModel = hiltViewModel<OperationDetailsViewModel>(),
+                onBackClick = navController::popBackStack,
+                onAccountClick = { },
+                snackbarHostState = snackbarHostState,
             )
         }
     }

@@ -25,10 +25,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.merge
 import ru.malevichrp.bbank.R
+import ru.malevichrp.bbank.core.AccountData
+import ru.malevichrp.bbank.core.AccountId
 import ru.malevichrp.bbank.core.LoadableUiState
-import ru.malevichrp.bbank.features.home.domain.AccountData
-import ru.malevichrp.bbank.features.home.domain.AccountId
-import ru.malevichrp.bbank.features.home.domain.Money
+import ru.malevichrp.bbank.core.Money
 import ru.malevichrp.bbank.features.home.items.accounts.AccountListViewModel
 import ru.malevichrp.bbank.features.home.items.accounts.accountCardsUi
 import ru.malevichrp.bbank.features.home.items.operations.OperationsCardUi

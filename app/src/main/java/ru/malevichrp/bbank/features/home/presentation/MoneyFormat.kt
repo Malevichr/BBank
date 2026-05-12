@@ -1,6 +1,6 @@
 package ru.malevichrp.bbank.features.home.presentation
 
-import ru.malevichrp.bbank.features.home.domain.Money
+import ru.malevichrp.bbank.core.Money
 import kotlin.math.abs
 
 fun Money.formatted(): String {

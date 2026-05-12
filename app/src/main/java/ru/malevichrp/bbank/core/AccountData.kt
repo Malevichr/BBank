@@ -1,4 +1,4 @@
-package ru.malevichrp.bbank.features.home.domain
+package ru.malevichrp.bbank.core
 
 import androidx.compose.runtime.Immutable
 

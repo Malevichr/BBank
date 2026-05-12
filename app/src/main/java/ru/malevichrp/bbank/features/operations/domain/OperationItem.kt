@@ -1,6 +1,6 @@
 package ru.malevichrp.bbank.features.operations.domain
 
-import ru.malevichrp.bbank.features.home.domain.Money
+import ru.malevichrp.bbank.core.Money
 
 sealed interface OperationItem {
     data class Operation(

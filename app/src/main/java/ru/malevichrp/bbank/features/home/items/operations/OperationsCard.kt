@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.malevichrp.bbank.R
 import ru.malevichrp.bbank.core.LoadableUiState
-import ru.malevichrp.bbank.features.home.domain.Money
+import ru.malevichrp.bbank.core.Money
 import ru.malevichrp.bbank.features.home.presentation.formatted
 
 
@@ -111,6 +111,7 @@ fun OperationsCardUi(
         }
     }
 }
+
 
 @Preview
 @Composable

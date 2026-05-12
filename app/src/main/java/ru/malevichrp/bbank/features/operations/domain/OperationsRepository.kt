@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.malevichrp.bbank.core.DomainError
 import ru.malevichrp.bbank.core.LoadResult
-import ru.malevichrp.bbank.features.home.domain.Money
+import ru.malevichrp.bbank.core.Money
 import javax.inject.Inject
 
 interface OperationsRepository {

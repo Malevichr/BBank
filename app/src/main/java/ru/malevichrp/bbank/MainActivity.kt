@@ -18,7 +18,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import ru.malevichrp.bbank.core.AccountId
+import ru.malevichrp.bbank.features.account.presentation.AccountRoute
+import ru.malevichrp.bbank.features.account.presentation.AccountScreen
+import ru.malevichrp.bbank.features.account.presentation.AccountViewModel
 import ru.malevichrp.bbank.features.home.items.accounts.AccountListViewModel
 import ru.malevichrp.bbank.features.home.items.operations.SpentMoneyViewModel
 import ru.malevichrp.bbank.features.home.items.profile.FullNameViewModel
@@ -124,7 +129,9 @@ fun BBankNavHost(
                     },
                     {},
                     {},
-                    {},
+                    { accountId ->
+                        navController.navigate(AccountRoute(accountId.value))
+                    },
                 ),
                 snackbarHostState = snackbarHostState
             )
@@ -153,6 +160,20 @@ fun BBankNavHost(
                 onBackClick = navController::popBackStack,
                 onAccountClick = { },
                 snackbarHostState = snackbarHostState,
+            )
+        }
+        composable<AccountRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<AccountRoute>()
+            AccountScreen(
+                viewModel = hiltViewModel<AccountViewModel>(),
+                onBackClick = { navController.popBackStack() },
+                onNavigateOperations = {
+                    navController.navigate(OperationsRoute)
+                },
+                onNavigateTransfer = { },
+                onNavigateTopUp = { },
+                snackbarHostState = snackbarHostState,
+                accountId = AccountId(route.accountId),
             )
         }
     }

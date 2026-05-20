@@ -22,4 +22,8 @@
     <string name="log_out">Выйти из аккаунта</string>
     <string name="profile_avatar">Аватар профиля</string>
     <string name="settings">Настройки</string>
+    <string name="account_operations">Операции по счету</string>
+    <string name="requisites">Реквизиты</string>
+    <string name="show">Показать</string>
+    <string name="hide">Скрыть</string>
 </resources>
